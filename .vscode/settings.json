@@ -1,0 +1,8 @@
+{
+  "css.customData": [],
+  "css.validate": false,
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "tailwindCSS.experimental.configFile": null
+}

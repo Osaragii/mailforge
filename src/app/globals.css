@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0a0a0f;
+  --color-surface: #111118;
+  --color-surface2: #1a1a24;
+  --color-accent: #c8f064;
+
+  --font-sans: "Outfit", sans-serif;
+  --font-serif: "DM Serif Display", serif;
+  --font-mono: "DM Mono", monospace;
+}
+
+::selection {
+  background: rgba(200, 240, 100, 0.2);
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0f; }
+::-webkit-scrollbar-thumb { background: #2a2a35; border-radius: 3px; }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+.animate-spin-slow { animation: spin 0.7s linear infinite; }
+.animate-blink { animation: blink 0.8s step-end infinite; }
+.animate-fade-up { animation: fadeUp 0.5s ease forwards; }
