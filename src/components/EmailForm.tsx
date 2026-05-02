@@ -52,32 +52,6 @@ export default function EmailForm({ onGenerate, isLoading }: Props) {
   return (
     <div className="bg-surface border border-white/7 rounded-2xl overflow-hidden mb-6 animate-fade-up">
 
-      {/* API Key row */}
-      <div className="px-6 py-4 border-b border-white/7 flex items-center gap-3 flex-wrap">
-        <span className="text-[11px] font-mono text-white/25 uppercase tracking-wider whitespace-nowrap">
-          API Key
-        </span>
-        <input
-          type="password"
-          id="api-key"
-          placeholder="gsk_..."
-          autoComplete="off"
-          className={`${inputClass} flex-1 min-w-50 font-mono text-xs`}
-        />
-        <span className="text-[11px] text-white/25">
-          Get yours at{" "}
-          <a
-            href="https://console.groq.com"
-            target="_blank"
-            rel="noreferrer"
-            className="text-accent hover:underline"
-          >
-            console.groq.com
-          </a>
-        </span>
-      </div>
-
-      {/* Form fields */}
       <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 

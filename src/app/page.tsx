@@ -26,9 +26,6 @@ export default function Home() {
   const [lastTone, setLastTone] = useState("");
 
   async function generate(formData: FormData, tone: string) {
-    const apiKey = (document.getElementById("api-key") as HTMLInputElement)?.value.trim();
-
-    if (!apiKey) return setError("Please enter your Anthropic API key.");
     if (!formData.product || !formData.recipient) return setError("Please fill in at least your product and target recipient.");
 
     setError("");
@@ -39,64 +36,37 @@ export default function Home() {
     setLastTone(tone);
     setCurrentTone(tone);
 
-    const prompt = `You are an expert cold email copywriter. Write a highly effective cold email for sales outreach.
-
-Details:
-- Product/Service: ${formData.product}
-- Target recipient: ${formData.recipient}
-- Their pain point: ${formData.pain || "not specified"}
-- Unique benefit offered: ${formData.benefit || "not specified"}
-- Call to action: ${formData.cta || "Schedule a quick call"}
-- Tone: ${tone}
-
-Write the email in this EXACT format — nothing else:
-SUBJECT: [subject line here]
----
-[email body here]
-
-Rules:
-- Subject line: curiosity-driven, under 8 words, no clickbait
-- Body: under 120 words
-- No fluff, no "I hope this email finds you well"
-- Mention their pain point in the first line
-- One clear CTA at the end
-- Sound like a human, not a robot
-- Do not use bullet points`;
-
     try {
-      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      const response = await fetch("/api/generate-email", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "llama-3.3-70b-versatile",
-          max_tokens: 600,
-          temperature: 0.8,
-          messages: [{ role: "user", content: prompt }],
+          product: formData.product,
+          recipient: formData.recipient,
+          pain: formData.pain,
+          benefit: formData.benefit,
+          cta: formData.cta,
+          tone,
         }),
       });
 
+      const data = (await response.json().catch(() => ({}))) as {
+        subject?: string;
+        body?: string;
+        error?: string;
+      };
+
       if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        throw new Error(err.error?.message || `API error ${response.status}`);
+        throw new Error(data.error || `Request failed (${response.status})`);
       }
 
-      const data = await response.json();
-      const fullText = data.choices?.[0]?.message?.content || "";
+      const extractedSubject = data.subject ?? "";
+      const extractedBody = data.body ?? "";
 
-      if (!fullText) throw new Error("No response received. Please try again.");
+      if (!extractedSubject && !extractedBody) {
+        throw new Error("No response received. Please try again.");
+      }
 
-      // Parse subject and body
-      const subjectMatch = fullText.match(/SUBJECT:\s*(.+)/i);
-      const extractedSubject = subjectMatch ? subjectMatch[1].trim() : "";
-      const parts = fullText.split("---");
-      const extractedBody = parts.length > 1
-        ? parts.slice(1).join("---").trim()
-        : fullText.replace(/SUBJECT:.+/i, "").trim();
-
-      // Animate body word by word
       const words = extractedBody.split(" ");
       let built = "";
       setSubject(extractedSubject);
@@ -106,10 +76,9 @@ Rules:
         setBody(built);
         await new Promise((r) => setTimeout(r, 18));
       }
-
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : "Something went wrong.";
-      setError("Error: " + message + "\n\nMake sure your Anthropic API key is correct.");
+      setError("Error: " + message);
       setSubject("");
       setBody("");
     } finally {
