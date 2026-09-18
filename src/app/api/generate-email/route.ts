@@ -88,9 +88,9 @@ export async function POST(request: NextRequest) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "meta-llama/llama-4-scout-17b-16e-instruct",
+        model: "qwen/qwen3.8-27b",
         max_tokens: 600,
-        temperature: 0.75,
+        temperature: 0.8,
         messages: [{ role: "user", content: prompt }],
       }),
     });
