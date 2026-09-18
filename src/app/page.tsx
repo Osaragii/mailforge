@@ -128,7 +128,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="py-10 text-center text-[11px] font-mono text-white/20">
-          built with claude ai · mailforge v1.0
+          built by dev · mailforge v1.0
         </footer>
       </div>
 
